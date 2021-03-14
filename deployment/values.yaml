@@ -10,7 +10,7 @@ logic:
   image:
     repository: docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding-js
     pullPolicy: IfNotPresent
-  version: 869f1d2 
+  version: dcc91dd 
 
 podSecurityContext: {}
   # fsGroup: 2000

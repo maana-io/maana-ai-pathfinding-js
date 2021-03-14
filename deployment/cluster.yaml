@@ -1,9 +1,9 @@
 auth:
   provider: keycloak
-  audience: cyanodata
-  identifier: cyanodata
-  client_auth_secret: maanaq-k8s-client-auth-secret
+  audience: AUDIENCE
+  identifier: IDENTIFIER
+  client_auth_secret: CLUSTER-client-auth-secret
   # Change this value ^^^ to match the name of your cluster (e.g. test, dev, etc.)
-  domain: https://keycloak.cyanodata.com
+  domain: https://keycloak.CLUSTER.com
 ckg:
-  url: https://maanaq.cyanodata.com:8443/
+  url: https://CLUSTER.com:8443/
