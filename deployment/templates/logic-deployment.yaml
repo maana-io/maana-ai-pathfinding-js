@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pathfinding.fullname" . }}-logic
+  name: {{ include "pathfinding.fullname" . }}
   labels:
     {{- include "pathfinding.labels" . | nindent 4 }}
 spec:
@@ -13,14 +13,14 @@ spec:
     metadata:
       labels:
         {{- include "pathfinding.selectorLabels" . | nindent 8 }}
-        app: {{ include "pathfinding.fullname" . }}-logic
+        app: {{ include "pathfinding.fullname" . }}
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       imagePullSecrets:
         - name: github-pkg-pull-secret
       containers:
-        - name: {{ template "pathfinding.fullname" . }}-logic
+        - name: {{ template "pathfinding.fullname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.logic.image.repository }}:{{ .Values.logic.version }}"
@@ -53,20 +53,17 @@ spec:
           - name: PERSISTPORT
             value: "{{ .Values.logic.service.persistport }}"  
           ports:
-            - name: pathfindinglogic
+            - name: logicport
               containerPort: {{ .Values.logic.service.logicport }}
               protocol: TCP
-            - name: pathfindingpersist
-              containerPort: {{ .Values.logic.service.persistport }}
-              protocol: TCP  
           livenessProbe:
             httpGet:
               path: /
-              port: pathfindinglogic
+              port: logicport
           readinessProbe:
             httpGet:
               path: /
-              port: pathfindinglogic
+              port: logicport
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
