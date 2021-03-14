@@ -25,10 +25,9 @@ import {
   log,
   print,
   initMetrics,
-  counter,
-  BuildGraphqlClient
+  counter
 } from 'io.maana.shared'
-require('dotenv').config()
+
 
 const options = {
   mode: 'js' // default
@@ -48,43 +47,13 @@ export const schema = makeExecutableSchema({
 })
 
 //
-// Client setup
-// - allow this service to be a client of Maana Q's Computational Knowledge Graph
-//
-let client
-const clientSetup = token => {
-  if (!client) {
-    // construct graphql client using endpoint and context
-    client = BuildGraphqlClient(CKG_ENDPOINT_URL, (_, { headers }) => {
-      // return the headers to the context so httpLink can read them
-      return {
-        headers: {
-          ...headers,
-          authorization: token ? `Bearer ${token}` : ''
-        }
-      }
-    })
-  }
-}
-
-//
 // Server setup
 //
 // Our service identity
-const SELF = process.env.SERVICE_ID || 'maana-service'
-
-// HTTP port
-const PORT = process.env.PORT
-
-// HOSTNAME for subscriptions etc.
-const HOSTNAME = process.env.HOSTNAME || 'localhost'
-
-// External DNS name for service
-const PUBLICNAME = process.env.PUBLICNAME || 'localhost'
-
-// Remote (peer) services we use
-const CKG_ENDPOINT_URL = process.env.CKG_ENDPOINT_URL
-
+const SELF = 'maana-ai-pathfinding'
+const PORT = 8050
+const HOSTNAME = '0.0.0.0'
+const PUBLICNAME = '0.0.0.0'
 const app = express()
 
 //
@@ -138,25 +107,7 @@ const initServer = options => {
       `listening on ${print.external(`http://${HOSTNAME}:${PORT}/graphql`)}`
     )
 
-    let auth0 = new AuthenticationClient({
-      domain: process.env.REACT_APP_PORTAL_AUTH_DOMAIN,
-      clientId: process.env.REACT_APP_PORTAL_AUTH_CLIENT_ID,
-      clientSecret: process.env.REACT_APP_PORTAL_AUTH_CLIENT_SECRET
-    })
 
-    auth0.clientCredentialsGrant(
-      {
-        audience: process.env.REACT_APP_PORTAL_AUTH_IDENTIFIER,
-        scope: 'read:client_grants'
-      },
-      function(err, response) {
-        if (err) {
-          console.error('Client was unable to connect', err)
-        }
-
-        clientSetup(response.access_token)
-      }
-    )
   })
 }
 

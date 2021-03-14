@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pathfinding.fullname" . }}-logic
+  labels:
+    {{- include "pathfinding.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.logic.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pathfinding.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pathfinding.selectorLabels" . | nindent 8 }}
+        app: {{ include "pathfinding.fullname" . }}-logic
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      imagePullSecrets:
+        - name: github-pkg-pull-secret
+      containers:
+        - name: {{ template "pathfinding.fullname" . }}-logic
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.logic.image.repository }}:{{ .Values.logic.version }}"
+          imagePullPolicy: {{ .Values.logic.image.pullPolicy }}
+          env:
+          - name: CKG_ENDPOINT_URL
+            value: "{{ .Values.ckg.url }}"
+          - name: REACT_APP_PORTAL_AUTH_PROVIDER
+            value: "{{ .Values.auth.provider }}"
+          - name: REACT_APP_AUTH_AUDIENCE
+            value: "{{ .Values.auth.audience }}"
+          - name: REACT_APP_PORTAL_AUTH_IDENTIFIER
+            value: "{{ .Values.auth.identifier }}"
+          - name: REACT_APP_PORTAL_AUTH_CLIENT_ID
+            valueFrom: 
+              secretKeyRef: 
+                name: {{ .Values.auth.client_auth_secret }}
+                key: username
+          - name: REACT_APP_PORTAL_AUTH_DOMAIN
+            value: "{{ .Values.auth.domain }}"  
+          - name: REACT_APP_PORTAL_AUTH_CLIENT_SECRET
+            valueFrom: 
+              secretKeyRef: 
+                name: {{ .Values.auth.client_auth_secret }}
+                key: password
+          - name: LAMBDA_SERVICE_ID
+            value: "{{ .Values.lambdaServiceId }}"
+          - name: LOGICPORT
+            value: "{{ .Values.logic.service.logicport }}"
+          - name: PERSISTPORT
+            value: "{{ .Values.logic.service.persistport }}"  
+          ports:
+            - name: pathfindinglogic
+              containerPort: {{ .Values.logic.service.logicport }}
+              protocol: TCP
+            - name: pathfindingpersist
+              containerPort: {{ .Values.logic.service.persistport }}
+              protocol: TCP  
+          livenessProbe:
+            httpGet:
+              path: /
+              port: pathfindinglogic
+          readinessProbe:
+            httpGet:
+              path: /
+              port: pathfindinglogic
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

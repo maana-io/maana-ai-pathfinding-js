@@ -1,0 +1,45 @@
+# INSTRUCTIONS
+# -----------------------------------------------------------------------------
+# This is an example ckg client auth file necessary for configuring a k-8
+# k-8 cluster to authenticate client applications for use with the ckg service.
+# You will need to replace the <USERNAME> placeholder below with a 64 bit 
+# encoded ckg application user accountname (e.g. maanaApp ), <AUTH-TOKEN> with
+# the 64-bit encoded password for the application user account, and <CLUSTER>
+# with the name of the cluster (e.g. lkg, stable, dev, test, etc.)
+
+# 1. Use the base64 utility to encode your application user accountname.  For 
+# example, from the command line, you can run:
+#
+# echo -n YOUR_USERNAME | base64
+#
+# copy the result and paste it onto line 41, replacing the <USERNAME> placeholder.
+
+# 2. Use the base64 utility to encode your application password.  For 
+# example, from the command line, you can run:
+#
+# echo -n YOUR_PASSWORD | base64
+#
+# copy the result and paste it onto line 40, replacing the <AUTH-TOKEN> placeholder.
+
+# 3. Replace the <CLUSTER> placeholder on line 44 with the prefix for your
+# k-8 installation (e.g. lkg, stable, dev, test, etc.).  
+
+# 4. Save this file.
+# !!! DO NOT CHECK YOUR CHANGES INTO THE REPOSITORY!!!
+
+# 5. Ensure that you are logged into you k8 cluster, and that you have the correct 
+# namespace selected.   
+
+# 6. From the command line, run the following command to create the pull secret 
+# in the k-8 cluster:
+#
+# kubectl apply -f ckg-client-auth.yaml
+
+apiVersion: v1
+data:
+  password: <AUTH-TOKEN>
+  username: <USERNAME>
+kind: Secret
+metadata:
+  name: <CLUSTER>
+type: Opaque

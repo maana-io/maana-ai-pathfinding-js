@@ -1,0 +1,9 @@
+auth:
+  provider: keycloak
+  audience: maanaLastKnownGood
+  identifier: maanaLastKnownGood
+  client_auth_secret: stable-client-auth-secret
+  # Change this value ^^^^^^ to match the name of your cluster (e.g. test, dev, etc.)
+  domain: https://keycloakdev.knowledge.maana.io:8443
+ckg:
+  url: https://stable.knowledge.maana.io:8443

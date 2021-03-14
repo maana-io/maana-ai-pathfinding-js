@@ -1,0 +1,48 @@
+imagePullSecrets: 
+
+logic:
+  replicaCount: 1
+  service: 
+    type: ClusterIP
+    type: LoadBalancer
+    logicport: 8050
+    persistport: 8051
+  image:
+    repository: docker.pkg.github.com/maana-io/bayes-network-deployment/maana-ai-bayes-net
+    pullPolicy: IfNotPresent
+  version: 2e07656 
+
+assistant:
+  replicaCount: 1
+  service: 
+    type: ClusterIP
+    type: LoadBalancer
+    port: 80
+  image:
+    repository: docker.pkg.github.com/maana-io/bayes-network-deployment/maana-bayes-net-assistant
+    pullPolicy: IfNotPresent
+  version: assistant-7982b2e
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+ckg: {}
+  # url
+
+auth: {}
+  # provider
+  # audience
+  # identifier
+  # client-identifier
+  # domain
+  # secret
+
+
