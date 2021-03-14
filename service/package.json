@@ -8,7 +8,7 @@
   "repository": "git@github.com:maana-io/maana-ai-pathfinding-js",
   "scripts": {
     "docker-build": "if [ -z \"$(git status --porcelain)\" ]; then docker build -t maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\" .; else ECHO \"docker repository is not pristine\"; fi",
-    "docker-run": "docker run -p 8050:8050 -p 8051:8051 --env-file .env -ti maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\"",
+    "docker-run": "docker run -p 8050:8050 -p 8051:8051 -ti maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\"",
     "docker-push": "if [ -z \"$(git status --porcelain)\" ]; then docker tag maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\" docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\"; docker push docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\"; else ECHO \"git repository is not pristine\"; fi",
     "docker-release": "if [ -z \"$(git status --porcelain)\" ]; then docker tag maana-ai-pathfinding:\"$(git rev-parse --short HEAD)\" docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding:$npm_package_version; docker push docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding:$npm_package_version; else ECHO \"git repository is not pristine\"; fi",
     "precommit": "lint-staged",
