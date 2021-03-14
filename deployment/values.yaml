@@ -8,9 +8,9 @@ logic:
     logicport: 8050
     persistport: 8051
   image:
-    repository: docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding-js
+    repository: docker.pkg.github.com/maana-io/maana-ai-pathfinding-js/maana-ai-pathfinding
     pullPolicy: IfNotPresent
-  version: dcc91dd 
+  version: 12c4430 
 
 podSecurityContext: {}
   # fsGroup: 2000
